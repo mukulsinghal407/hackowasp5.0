@@ -1,0 +1,14 @@
+.one-entry{
+    margin: 20px 0;
+}
+
+hr{
+    margin:30px 0px;
+    border: 2px 0px 0px 0px;
+    border-width: 1px;
+    border-style: dashed;
+}
+
+.main{
+    margin:auto 1.5rem;
+}
