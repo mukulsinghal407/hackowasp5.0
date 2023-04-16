@@ -5,3 +5,11 @@ hr{
     border-style: dashed;
     /* width: 90%; */
 }
+
+.temp{
+    background-color:#FFF3E2 !important;
+    height: 100vh;
+    margin: -20px;
+    margin-top: 0;
+    padding: 30px;
+}

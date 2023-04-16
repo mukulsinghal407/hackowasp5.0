@@ -10,10 +10,11 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
+import Plot from "react-plotly.js";
 import { db } from "../../config/firebaseAuth";
 import TableCompo from "../TableCompo/TableCompo";
 import Appointment from "./Appointment/Appointment.jsx";
+import Navbar from '../Navbar/Navbar'
 import "./styles.css";
 
 const style = {
@@ -58,6 +59,10 @@ const AllBanks = ({ user }) => {
     index = keys.indexOf("name");
     keys.splice(index, 1);
     index = keys.indexOf("phone");
+    keys.splice(index, 1);
+    index = keys.indexOf("longitude");
+    keys.splice(index, 1);
+    index = keys.indexOf("latitude");
     keys.splice(index, 1);
     return keys;
   };
@@ -111,12 +116,12 @@ const AllBanks = ({ user }) => {
       "&lon=" +
       String(lon);
     fetch(url)
-    .then(response => {
-      return response.json()
-    })
-    .then(data => {
-      setDistance(data[0]);
-    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setDistance(data[0]);
+      });
     // const response = await fetch(url);
     // const data = await response.json();
     // console.log(data);
@@ -127,118 +132,122 @@ const AllBanks = ({ user }) => {
   useEffect(() => {
     fetchBanks();
     console.log(dist);
-  }, [fetchBanks, dataFiltered,dist]);
+  }, [fetchBanks, dataFiltered, dist]);
 
   return (
     <>
-      <div style={{ margin: "10px 30px" }}>
-        <h1>Banks Nearby</h1>
-        <TextField
-          fullWidth
-          id="search-bar"
-          className="text"
-          onInput={(e) => {
-            //just get the toOrders search result modified here and we are done.
-            setSearchQuery(e.target.value);
-          }}
-          label="Enter the bank name"
-          variant="outlined"
-          placeholder="Search..."
-          size="medium"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <hr />
-      </div>
-      <div style={{ margin: "10px 30px" }}>
-        {dataFiltered.map((order, index) => {
-          return (
-            <>
-              <Grid key={index} container style={{ margin: "10px 30px" }}>
-                <Grid
-                  item
-                  xs={7}
-                  columnGap={2}
-                  columnSpacing={2}
-                  rowGap={2}
-                  rowSpacing={2}
-                >
-                  <p>
-                    <strong>Name : </strong>
-                    {order.name}
-                  </p>
-                  <p>
-                    <strong>Phone : </strong>
-                    {order.phone}
-                  </p>
-                </Grid>
-                <Grid
-                  item
-                  xs={3}
-                  columnGap={2}
-                  columnSpacing={2}
-                  rowGap={2}
-                  rowSpacing={2}
-                  display={"flex"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                >
-                  {show ? (
+      <Navbar/>
+      <div className="temp">
+        <div style={{ margin: "10px 30px" }}>
+          <h1>Banks Nearby</h1>
+          <TextField
+            fullWidth
+            id="search-bar"
+            className="text"
+            onInput={(e) => {
+              //just get the toOrders search result modified here and we are done.
+              setSearchQuery(e.target.value);
+            }}
+            label="Enter the bank name"
+            variant="outlined"
+            placeholder="Search..."
+            size="medium"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <hr />
+        </div>
+        <div style={{ margin: "10px 30px" }}>
+          {dataFiltered.map((order, index) => {
+            return (
+              <>
+                <Grid key={index} container style={{ margin: "10px 30px" }}>
+                  <Grid
+                    item
+                    xs={7}
+                    columnGap={2}
+                    columnSpacing={2}
+                    rowGap={2}
+                    rowSpacing={2}
+                  >
+                    <p>
+                      <strong>Name : </strong>
+                      {order.name}
+                    </p>
+                    <p>
+                      <strong>Phone : </strong>
+                      {order.phone}
+                    </p>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    columnGap={2}
+                    columnSpacing={2}
+                    rowGap={2}
+                    rowSpacing={2}
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                  >
+                    {show ? (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => {
+                          getDistance(order.latitude, order.longitude);
+                          setShow(false);
+                        }}
+                      >
+                        View Distance
+                      </Button>
+                    ) : (
+                      <div>
+                        <p>
+                          <strong>Distance : </strong>
+                          {dist?.distance.text}
+                        </p>
+                        <p>
+                          <strong>Time : </strong>
+                          {dist?.duration.text}
+                        </p>
+                      </div>
+                    )}
+                  </Grid>
+                  <Grid
+                    item
+                    xs={2}
+                    columnGap={2}
+                    columnSpacing={2}
+                    rowGap={2}
+                    rowSpacing={2}
+                    display={"flex"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                  >
                     <Button
                       variant="outlined"
-                      color="success"
+                      color={"warning"}
                       onClick={() => {
-                        getDistance(order.latitude, order.longitude);
-                        setShow(false);
+                        handleOpen(index);
                       }}
                     >
-                      View Distance
+                      View Details
                     </Button>
-                  ) : (
-                    <div>
-                      <p>
-                       <strong>Distance : </strong>{dist?.distance.text}
-                      </p>
-                      <p>
-                       <strong>Time : </strong>{dist?.duration.text}
-                      </p>
-                   </div>
-                  )}
+                  </Grid>
                 </Grid>
-                <Grid
-                  item
-                  xs={2}
-                  columnGap={2}
-                  columnSpacing={2}
-                  rowGap={2}
-                  rowSpacing={2}
-                  display={"flex"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                >
-                  <Button
-                    variant="outlined"
-                    color={"warning"}
-                    onClick={() => {
-                      handleOpen(index);
-                    }}
-                  >
-                    View Details
-                  </Button>
-                </Grid>
-              </Grid>
-            </>
-          );
-        })}
-        {bank.length ? "" : <h4>Seems Like you don't have any orders</h4>}
-        <hr />
+              </>
+            );
+          })}
+          {bank.length ? "" : <h4>Seems Like you don't have any orders</h4>}
+          <hr />
+        </div>
       </div>
-
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -246,6 +255,19 @@ const AllBanks = ({ user }) => {
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <TableCompo item={item} headings={headings} />
+            <Plot
+              data={[
+                {
+                  y: item,
+                  x: headings,
+                  type: "line+marker",
+                  marker: { color: "red" },
+                },
+                { type: "bar", y: item, x: headings },
+              ]}
+              layout={{ title: "Inventory" }}
+              useResizeHandler={true}
+            />
           </Typography>
           <br />
           {showBook() ? (
@@ -262,7 +284,6 @@ const AllBanks = ({ user }) => {
           ) : null}
         </Box>
       </Modal>
-
       <Modal
         open={openOrder}
         onClose={() => {

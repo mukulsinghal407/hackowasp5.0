@@ -26,7 +26,8 @@ const Appointment = ({ user,bank }) => {
         bank_id: bank.bank_id,
         user_id: user?.uid,
         phone: user.phone,
-        name: user?.name
+        name: user?.name,
+        recieved: false
       };
       await addDoc(collection(db, "appointments"), newRequest);
       alert("Request Raised Successfully...");

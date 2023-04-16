@@ -7,9 +7,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../../config/firebaseAuth";
 import { checkQuantity } from "../helperFunctions/checks";
-
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
-
+import Plot from "react-plotly.js";
 import "./styles.css";
 import TableCompo from "../../../TableCompo/TableCompo";
 
@@ -67,6 +66,20 @@ const Order = ({ user }) => {
         <h1> Record New Addition </h1>
         <hr />
         <TableCompo item={getItems(user)} headings={getHeadings(user)} />
+        {/* <Plot
+        data={[
+          {
+            y: getItems(user),
+            x: getHeadings(user),
+            type: "line+marker",
+            marker: { color: "red" },
+          },
+          {type: 'bar', y: getItems(user),
+            x: getHeadings(user),},
+        ]}
+        layout={{ title: "Inventory" }}
+        useResizeHandler={true}
+      /> */}
         <hr />
         <Grid container columnSpacing={2} rowGap={2}>
           <Grid item xs={12}>

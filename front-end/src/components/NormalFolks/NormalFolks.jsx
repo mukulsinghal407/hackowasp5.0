@@ -15,7 +15,6 @@ const Bank = ({ user }) => {
 
   return (
     <>
-      <Navbar />
       <AllBanks user={user} />
     </>
   );

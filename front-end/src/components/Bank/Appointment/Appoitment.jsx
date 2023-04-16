@@ -2,14 +2,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { db } from "../../../config/firebaseAuth";
-import { query, collection, where, onSnapshot, deleteDoc,doc,getDoc, setDoc } from "firebase/firestore";
-
 import {
-  Button,
-  Grid,
-  TextField,
-  InputAdornment,
-} from "@mui/material";
+  query,
+  collection,
+  where,
+  onSnapshot,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+
+import { Button, Grid, TextField, InputAdornment } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -22,12 +26,13 @@ const Appoitment = ({ user }) => {
   const fetchRequests = useCallback(async () => {
     const q = query(
       collection(db, "appointments"),
-      where("bank_id", "==", user?.uid)
+      where("bank_id", "==", user?.uid),
+      where("recieved","==",false)
     );
     onSnapshot(q, (querySnapshot) => {
       let result = [];
       querySnapshot.forEach((req) => {
-        result.push({info:req.data(),id:req.id});
+        result.push({ info: req.data(), id: req.id });
       });
       setRequest(result);
     });
@@ -49,15 +54,19 @@ const Appoitment = ({ user }) => {
   }, [user, navigate, fetchRequests]);
 
   const handleTransaction = async (order) => {
-    const bankRef = doc(db,'banks',user?.uid);
+    const bankRef = doc(db, "banks", user?.uid);
     const doct = await getDoc(bankRef);
     const newUser = doct.data();
-    if((newUser[order.info.blood] - order.info.quantity)>=0){
-      newUser[order.info.blood ] = newUser[order.info.blood] - Number(order.info.quantity);
-      await setDoc(doc(db,"banks",newUser.bank_id),newUser);
-      await deleteDoc(doc(db,"appointments",order.id));
-    }
-    else{
+    if (newUser[order.info.blood] - order.info.quantity >= 0) {
+      newUser[order.info.blood] =
+        newUser[order.info.blood] - Number(order.info.quantity);
+      await setDoc(doc(db, "banks", newUser.bank_id), newUser);
+      const date = new Date();
+      await updateDoc(doc(db, "appointments", order.id), {
+        recieved: "true",
+        date: date.toLocaleDateString() + date.toLocaleTimeString(),
+      });
+    } else {
       alert("The request cannot be granted...");
     }
   };
@@ -129,13 +138,15 @@ const Appoitment = ({ user }) => {
                   justifyContent={"center"}
                   alignItems={"center"}
                 >
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={()=>handleTransaction(order)}
-                  >
-                    Done
-                  </Button>
+                  {order.recieved ? (
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => handleTransaction(order)}
+                    >
+                      Done
+                    </Button>
+                  ) : null}
                 </Grid>
               </Grid>
             </>

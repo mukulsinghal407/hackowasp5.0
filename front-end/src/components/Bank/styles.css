@@ -5,7 +5,7 @@
 
 /*SideBar*/
 .sidebar{
-    background-color: #25bac1;
+    background-color: #fd7d63;
     color:white;
     border-right: 1px solid;
     box-shadow: 5px 10px 8px #0000;
@@ -37,7 +37,7 @@ h2{
     padding: 25px;
 }
 .items .active{
-    background-color: rgb(255, 194, 194);
+    background-color: rgb(255, 87, 87);
     font-size: larger;
     text-decoration: underline;
     font-family:cursive;
@@ -49,6 +49,6 @@ h2{
 .content{
     background-color: #5f9d7226;
     padding: 10px;
-    height: 100vh;
+    height: 98vh;
     overflow: scroll;
 }

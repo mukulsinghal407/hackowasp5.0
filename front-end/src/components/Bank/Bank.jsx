@@ -44,7 +44,7 @@ const Bank = ({ user }) => {
             src={
               "https://api.dicebear.com/6.x/initials/svg?seed=" +
               user.name +
-              "&radius=50&size=96&backgroundType=gradientLinear"
+              "&radius=50&size=96&backgroundType=solid&backgroundColor=FFE5CA&textColor=000000"
             }
             className="initials"
             alt="Name"
