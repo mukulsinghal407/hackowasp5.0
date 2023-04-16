@@ -88,7 +88,7 @@ const AllBanks = ({ user }) => {
 
   const showBook = () => {
     let items = window.location.href.split("/");
-    let index = items.indexOf("Banks");
+    let index = items.indexOf("banks");
     return !(index > -1);
   };
 
