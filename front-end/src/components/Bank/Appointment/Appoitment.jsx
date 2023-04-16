@@ -138,7 +138,7 @@ const Appoitment = ({ user }) => {
                   justifyContent={"center"}
                   alignItems={"center"}
                 >
-                  {order.recieved ? (
+                  {!order.recieved ? (
                     <Button
                       variant="outlined"
                       color="secondary"
